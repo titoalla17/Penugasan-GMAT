@@ -6,7 +6,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif; /* Font baru untuk keseluruhan situs */
+    font-family: 'Poppins', sans-serif; 
     background-color: #f5f5dc;
     color: #333333;
     min-height: 100vh;
@@ -15,11 +15,10 @@ body {
     justify-content: center;
   }
   
-  /* Gaya untuk tulisan GPS */
   .gps-title {
-    font-size: 2.5rem;       /* Membuat tulisan lebih besar */
-    font-weight: 600;        /* Tebal agar menonjol */
-    color: #333333;          /* Sesuaikan warna dengan tema */
+    font-size: 2.5rem;
+    font-weight: 600;        
+    color: #333333;          
     text-align: center;
     margin-bottom: 20px;
   }

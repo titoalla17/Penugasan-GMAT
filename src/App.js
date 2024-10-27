@@ -1,29 +1,37 @@
 import { useState, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
 import Plot from "react-plotly.js";
 import "./App.css";
 import React from 'react';
 import Navbar from './navbar.js';
 
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
 function App() {
   const [data, setData] = useState({ x: [], voltage: [], preassure: [], latitude: [], longitude: [], altitude: [],});
   const [i, setI] = useState(0);
-  const [coordinates, setCoordinates] = useState({
-    latitude: -7.765679330440511,
-    longitude: 110.3711746288335,});
-  
+
+  // Inisialisasi koordinat marker
+  const fixedCoordinates = { latitude: -7.765698, longitude: 110.371153 };
+
+  const [coordinates] = useState(fixedCoordinates);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      // Simulate data update
+      // Simulasi data dalam plot
       setData((prevData) => {
-        const newVoltage = Math.random() * 20; // Simulated voltage data
-        const newPreassure = Math.random() * 30 + 10; // Simulated temperature data
-        const newLatitude = Math.random() * (-7.765679330440511 - (-7.765679330440511)) + (-7.765679330440511); // Simulated latitude data
-        const newLongitude = Math.random() * (110.38 - 110.36) + 110.36; // Simulated longitude data
-        const newAltitude = Math.random() * 1000 + 100; // Simulated altitude data
-
-        setCoordinates({ latitude: newLatitude, longitude: newLongitude });
+        const newVoltage = Math.random() * 20; 
+        const newPreassure = Math.random() * 30 + 10; 
+        const newLatitude = Math.random() * (0.01) + (-7.765679330440511 - 0.005); 
+        const newLongitude = Math.random() * (0.02) + (110.36);  
+        const newAltitude = Math.random() * 1000 + 100; 
 
         return {
           x: [...prevData.x, i],
@@ -37,39 +45,39 @@ function App() {
       setI((prevI) => prevI + 1);
     }, 1000); // Update every second
 
-    return () => clearInterval(interval); // Clean up interval on component unmount
+    return () => clearInterval(interval); 
   }, [i]);
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-full p-5">
       <Navbar />
-      <div className="title">GPS</div>
-      <div className="flex flex-col w-[50%] p-2 gap-2">
+      <h2>GPS</h2>
+      <div className="flex flex-col w-[100%] p-2 gap-2">
         {/* Map Section */}
-        <div className="map-container" style={{ width: "100%", height: "400px" }}>
-          <MapContainer
-            center={[-7.765679330440511, 110.3711746288335]}
-            zoom={13}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <TileLayer
+        <div className="map-container" style={{ width: "100%", height: "700px" }}>
+        <MapContainer
+          center={[fixedCoordinates.latitude, fixedCoordinates.longitude]} // Use fixed coordinates for center
+          zoom={13}
+          style={{ width: "100%", height: "100%" }}
+        >
+          <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+              attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
             />
-            <Marker position={[-7.765679330440511, 110.3711746288335]}>
-              <Popup>Payload Location</Popup>
+            <Marker position={[fixedCoordinates.latitude, fixedCoordinates.longitude]}> 
+             <Popup>Payload Location</Popup>
             </Marker>
-            {/* Coordinates Display */}
-            <div style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              backgroundColor: 'white',
-              padding: '5px',
-              borderRadius: '5px',
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)'
-            }}>
-              <strong>Coordinates:</strong><br />
+             {/* Coordinates Display */}
+               <div style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  backgroundColor: 'white',
+                  padding: '5px',
+                  borderRadius: '5px',
+                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)'
+                }}>
+             <strong>Coordinates:</strong><br />
               Latitude: {coordinates.latitude.toFixed(6)}<br />
               Longitude: {coordinates.longitude.toFixed(6)}
             </div>
